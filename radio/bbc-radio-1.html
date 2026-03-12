@@ -1,0 +1,36 @@
+⧐
+</div>
+
+</div>
+
+<audio id="radio">
+<source src="https://lsn.lv/bbcradio.m3u8?station=bbc_radio_one%22&bitrate=320000%22" type="audio/mpeg">
+</audio>
+
+<script>
+
+const audio = document.getElementById("radio");
+const btn = document.getElementById("playBtn");
+
+let playing = false;
+
+btn.onclick = function(){
+
+if(!playing){
+    audio.play();
+    btn.innerHTML = "■";
+    playing = true;
+}
+else{
+    audio.pause();
+    audio.currentTime = 0;
+    btn.innerHTML = "⧐";
+    playing = false;
+}
+
+};
+
+</script>
+
+</body>
+</html>
