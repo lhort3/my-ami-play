@@ -3,317 +3,178 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Swipe Radio</title>
+<title>My Ami Play UI</title>
 
 <style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f2f2f2;
+    }
 
-body{
-    margin:0;
-    min-height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background:#fb5a33;
-    font-family:Arial, Helvetica, sans-serif;
-    color:white;
-    padding:20px;
-    box-sizing:border-box;
-    overflow:hidden;
-}
+    .app {
+        max-width: 420px;
+        width: 100%;
+        margin: auto;
+        background: #ff3c00;
+        min-height: 100vh;
+        color: white;
+        display: flex;
+        flex-direction: column;
+    }
 
-.player{
-    text-align:center;
-    width:100%;
-    max-width:400px;
-}
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 20px;
+        font-weight: bold;
+    }
 
-.viewport{
-    overflow:hidden;
-    position:relative;
-    width:100%;
-}
+    .title {
+        text-align: center;
+        font-size: 20px;
+    }
 
-.slide{
-    transition:transform 0.35s ease, opacity 0.35s ease;
-}
+    .car-section {
+        text-align: center;
+        padding: 10px 20px;
+    }
 
-/* animations */
-.slide.out-left{ transform:translateX(-100%); opacity:0; }
-.slide.out-right{ transform:translateX(100%); opacity:0; }
+    .car-section img {
+        width: 70%;
+        max-width: 260px;
+    }
 
-.slide.reset{ transition:none; transform:translateX(0); opacity:1; }
+    .status {
+        display: flex;
+        justify-content: space-between;
+        padding: 0 20px 20px;
+        font-size: 18px;
+    }
 
-.slide.in-left{ transform:translateX(100%); }
-.slide.in-right{ transform:translateX(-100%); }
+    .grid {
+        background: white;
+        border-radius: 20px 20px 0 0;
+        padding: 20px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        flex-grow: 1;
+    }
 
-.slide.animate{
-    transition:transform 0.35s ease, opacity 0.35s ease;
-    transform:translateX(0);
-    opacity:1;
-}
+    .card {
+        background: #f7f7f7;
+        border-radius: 15px;
+        padding: 20px 10px;
+        text-align: center;
+        color: #ff3c00;
+        font-size: 14px;
+        cursor: pointer;
+        transition: 0.2s;
+    }
 
-/* UI */
-.logo-box{
-    width:60vw;
-    max-width:220px;
-    aspect-ratio:1/1;
-    border-radius:20%;
-    overflow:hidden;
-    margin:auto;
-    margin-bottom:20px;
-}
+    .card:active {
+        transform: scale(0.97);
+    }
 
-.logo-box img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-}
-
-.song{
-    font-size:clamp(18px, 5vw, 24px);
-    font-weight:bold;
-}
-
-.artist{
-    font-size:clamp(14px, 3.5vw, 18px);
-    opacity:0.7;
-    margin-bottom:25px;
-}
-
-.play-button{
-    width:20vw;
-    max-width:80px;
-    aspect-ratio:1/1;
-    border-radius:50%;
-    border:3px solid white;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    cursor:pointer;
-    margin:auto;
-    font-size:clamp(20px, 6vw, 30px);
-    transition:0.2s;
-}
-
-.play-button:hover{
-    transform:scale(1.08);
-}
-
-/* START OVERLAY */
-.start-overlay{
-    position:fixed;
-    inset:0;
-    background:#fb5a33;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    z-index:10;
-}
-
-.start-btn{
-    width:100px;
-    height:100px;
-    border-radius:50%;
-    border:3px solid white;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-size:40px;
-    cursor:pointer;
-}
-
+    .card img {
+        width: 50px;
+        height: 50px;
+        object-fit: contain;
+        margin-bottom: 8px;
+    }
 </style>
 </head>
 
 <body>
 
-<!-- START SCREEN -->
-<div class="start-overlay" id="startOverlay">
-    <div class="start-btn" id="startBtn">⧐</div>
-</div>
+<div class="app">
 
-<div class="player">
+    <div class="header">
+        <div>☰</div>
+        <div class="title">my not ami play</div>
+        <div>⇥</div>
+    </div>
 
-<div class="viewport">
-    <div class="slide" id="slide">
+    <div class="car-section">
+        <div>Citroën Ami</div>
+        <div style="font-size:40px;">☀️</div>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Citroen_Ami_2020.jpg/320px-Citroen_Ami_2020.jpg">
+    </div>
 
-        <div class="logo-box">
-            <img id="logo">
+    <div class="status">
+        <div>
+            <div>21°C</div>
+            <small>Sunny</small>
         </div>
 
-        <div class="song" id="song"></div>
-        <div class="artist" id="artist"></div>
+        <div style="text-align:right;">
+            <div id="time">--:--</div>
+            <small id="date">---</small>
+        </div>
+    </div>
+
+    <div class="grid">
+
+        <div class="card" onclick="openApp('nav')">
+            <img src="YOUR_NAV_IMAGE_URL_HERE">
+            Nav
+        </div>
+
+        <div class="card" onclick="openApp('phone')">
+            <img src="YOUR_PHONE_IMAGE_URL_HERE">
+            Phone
+        </div>
+
+        <div class="card" onclick="openApp('radio')">
+            <img src="YOUR_RADIO_IMAGE_URL_HERE">
+            Radio
+        </div>
+
+        <div class="card" onclick="openApp('media')">
+            <img src="YOUR_MEDIA_IMAGE_URL_HERE">
+            Media
+        </div>
 
     </div>
-</div>
-
-<div class="play-button" id="playBtn">⧐</div>
 
 </div>
-
-<audio id="radio"></audio>
 
 <script>
-
-/* STATIONS */
-const stations = [
-{
-    name: "Capital",
-    artist: "My Ami Radio",
-    stream: "http://media-ice.musicradio.com/CapitalCoventryMP3",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8efETqvqv-ncVuUGZ8-Hu05NtjNQzJ6_32n0XB4v_wQ&s"
-},
-{
-    name: "BBC Radio 1",
-    artist: "My Ami Radio (UK)",
-    stream: "https://lsn.lv/bbcradio.m3u8?station=bbc_radio_one%22&bitrate=320000%22",
-    image: "https://i1.sndcdn.com/artworks-000101022586-avs1tc-t500x500.jpg"
-},
-{
-    name: "Smooth CHILL",
-    artist: "My Ami Radio",
-    stream: "http://media-ice.musicradio.com/ChillMP3",
-    image: "https://www.globalplayer.com/assets/track-placeholders/smoothchill.jpg"
-},
-{
-    name: "Heart Xmas",
-    artist: "Channel May Not Be Streaming",
-    stream: "http://media-ice.musicradio.com/HeartXmasMP3",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUYS4KY-p0Zs7fczWRlMBSY87pdTlidJr27w&s"
-}
-];
-
-let current = 0;
-let isPlaying = false;
-let unlocked = false;
-
-const audio = document.getElementById("radio");
-const logo = document.getElementById("logo");
-const song = document.getElementById("song");
-const artist = document.getElementById("artist");
-const btn = document.getElementById("playBtn");
-const slide = document.getElementById("slide");
-const startOverlay = document.getElementById("startOverlay");
-const startBtn = document.getElementById("startBtn");
-
-/* LOAD */
-function loadStation(index){
-    current = (index + stations.length) % stations.length;
-
-    const s = stations[current];
-
-    audio.src = s.stream;
-    logo.src = s.image;
-    song.innerText = s.name;
-    artist.innerText = s.artist;
-
-    if(unlocked && isPlaying){
-        audio.play();
-    }
+function openApp(app) {
+    if (app === "nav") window.open("waze://", "_blank");
+    if (app === "phone") alert("Phone app");
+    if (app === "radio") window.open("https://lhort3.github.io/my-ami-play/radio-player", "_blank");
+    if (app === "media") alert("Media app");
 }
 
-/* INIT */
-loadStation(current);
+function updateClock() {
+    const now = new Date();
 
-/* FIRST TAP */
-startBtn.onclick = function(){
-    unlocked = true;
-    isPlaying = true;
+    let hours = now.getHours();
+    const minutes = now.getMinutes();
 
-    audio.play();
+    hours = hours % 12;
+    if (hours === 0) hours = 12;
 
-    btn.innerHTML = "■";
-    startOverlay.style.display = "none";
-};
+    const time =
+        String(hours).padStart(2, "0") +
+        ":" +
+        String(minutes).padStart(2, "0");
 
-/* BUTTON */
-btn.onclick = function(){
-    if(!unlocked) return;
+    const date = now.toLocaleDateString([], {
+        weekday: "short",
+        day: "2-digit",
+        month: "short"
+    });
 
-    if(isPlaying){
-        audio.pause();
-        btn.innerHTML = "⧐";
-        isPlaying = false;
-    } else {
-        audio.play();
-        btn.innerHTML = "■";
-        isPlaying = true;
-    }
-};
-
-/* ANIMATION SWITCH */
-function changeStation(newIndex, direction){
-
-    slide.classList.add(direction === "next" ? "out-left" : "out-right");
-
-    setTimeout(() => {
-
-        audio.pause();
-        loadStation(newIndex);
-
-        slide.classList.remove("out-left","out-right");
-        slide.classList.add("reset");
-
-        slide.classList.add(direction === "next" ? "in-left" : "in-right");
-
-        slide.offsetHeight;
-
-        slide.classList.remove("reset","in-left","in-right");
-        slide.classList.add("animate");
-
-    }, 300);
+    document.getElementById("time").textContent = time;
+    document.getElementById("date").textContent = date;
 }
 
-function nextStation(){
-    changeStation(current + 1, "next");
-}
-
-function prevStation(){
-    changeStation(current - 1, "prev");
-}
-
-/* SWIPE */
-let startX = 0;
-
-document.addEventListener("touchstart", e => {
-    startX = e.touches[0].clientX;
-});
-
-document.addEventListener("touchend", e => {
-    let diff = startX - e.changedTouches[0].clientX;
-
-    if(Math.abs(diff) > 50 && unlocked){
-        if(diff > 0){
-            nextStation();
-        } else {
-            prevStation();
-        }
-    }
-});
-
-/* DESKTOP */
-let mouseDown = false;
-
-document.addEventListener("mousedown", e => {
-    mouseDown = true;
-    startX = e.clientX;
-});
-
-document.addEventListener("mouseup", e => {
-    if(!mouseDown) return;
-    mouseDown = false;
-
-    let diff = startX - e.clientX;
-
-    if(Math.abs(diff) > 50 && unlocked){
-        if(diff > 0){
-            nextStation();
-        } else {
-            prevStation();
-        }
-    }
-});
-
+setInterval(updateClock, 1000);
+updateClock();
 </script>
 
 </body>
