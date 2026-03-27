@@ -6,84 +6,79 @@
 <title>My Ami Play UI</title>
 
 <style>
-    body {
-        margin: 0;
-        font-family: Arial, sans-serif;
-        background: #f2f2f2;
-    }
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f2f2f2;
+}
 
-    .app {
-        max-width: 420px;
-        width: 100%;
-        margin: auto;
-        background: #ff3c00;
-        min-height: 100vh;
-        color: white;
-        display: flex;
-        flex-direction: column;
-    }
+.app {
+    max-width: 420px;
+    width: 100%;
+    margin: auto;
+    background: #ff3c00;
+    min-height: 100vh;
+    color: white;
+    display: flex;
+    flex-direction: column;
+}
 
-    .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 15px 20px;
-        font-weight: bold;
-    }
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    font-weight: bold;
+}
 
-    .title {
-        text-align: center;
-        font-size: 20px;
-    }
+.title {
+    text-align: center;
+    font-size: 20px;
+}
 
-    .car-section {
-        text-align: center;
-        padding: 10px 20px;
-    }
+.car-section {
+    text-align: center;
+    padding: 10px 20px;
+}
 
-    .car-section img {
-        width: 70%;
-        max-width: 260px;
-    }
+.car-section img {
+    width: 70%;
+    max-width: 260px;
+}
 
-    .status {
-        display: flex;
-        justify-content: space-between;
-        padding: 0 20px 20px;
-        font-size: 18px;
-    }
+.status {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 20px 20px;
+    font-size: 18px;
+}
 
-    .grid {
-        background: white;
-        border-radius: 20px 20px 0 0;
-        padding: 20px;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 15px;
-        flex-grow: 1;
-    }
+.grid {
+    background: white;
+    border-radius: 20px 20px 0 0;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    flex-grow: 1;
+}
 
-    .card {
-        background: #f7f7f7;
-        border-radius: 15px;
-        padding: 20px 10px;
-        text-align: center;
-        color: #ff3c00;
-        font-size: 14px;
-        cursor: pointer;
-        transition: 0.2s;
-    }
+.card {
+    background: #f7f7f7;
+    border-radius: 15px;
+    padding: 20px 10px;
+    text-align: center;
+    color: #ff3c00;
+    font-size: 14px;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: 0.2s;
+}
 
-    .card:active {
-        transform: scale(0.97);
-    }
-
-    .card img {
-        width: 50px;
-        height: 50px;
-        object-fit: contain;
-        margin-bottom: 8px;
-    }
+.card:active {
+    transform: scale(0.97);
+}
 </style>
 </head>
 
@@ -104,37 +99,25 @@
     </div>
 
     <div class="status">
-        <div>
-            <div>21°C</div>
-            <small>Sunny</small>
-        </div>
-
-        <div style="text-align:right;">
-            <div id="time">--:--</div>
-            <small id="date">---</small>
-        </div>
+        <div id="time">--:--</div>
     </div>
 
     <div class="grid">
 
         <div class="card" onclick="openApp('nav')">
-            <img src="YOUR_NAV_IMAGE_URL_HERE">
-            Nav
+            🧭<br>Nav
         </div>
 
         <div class="card" onclick="openApp('phone')">
-            <img src="YOUR_PHONE_IMAGE_URL_HERE">
-            Phone
+            📞<br>Phone
         </div>
 
         <div class="card" onclick="openApp('radio')">
-            <img src="YOUR_RADIO_IMAGE_URL_HERE">
-            Radio
+            📻<br>Radio
         </div>
 
         <div class="card" onclick="openApp('media')">
-            <img src="YOUR_MEDIA_IMAGE_URL_HERE">
-            Media
+            🎵<br>Media
         </div>
 
     </div>
@@ -143,10 +126,23 @@
 
 <script>
 function openApp(app) {
-    if (app === "nav") window.open("waze://", "_blank");
-    if (app === "phone") alert("Phone app");
-    if (app === "radio") window.open("https://lhort3.github.io/my-ami-play/radio-player", "_blank");
-    if (app === "media") alert("Media app");
+
+    if (app === "nav") {
+        // safer fallback navigation
+        window.location.href = "https://www.google.com/maps";
+    }
+
+    if (app === "phone") {
+        alert("Phone app opened");
+    }
+
+    if (app === "radio") {
+        window.location.href = "https://lhort3.github.io/my-ami-play/radio-player";
+    }
+
+    if (app === "media") {
+        alert("Media app opened");
+    }
 }
 
 function updateClock() {
@@ -155,22 +151,12 @@ function updateClock() {
     let hours = now.getHours();
     const minutes = now.getMinutes();
 
-    hours = hours % 12;
-    if (hours === 0) hours = 12;
-
     const time =
         String(hours).padStart(2, "0") +
         ":" +
         String(minutes).padStart(2, "0");
 
-    const date = now.toLocaleDateString([], {
-        weekday: "short",
-        day: "2-digit",
-        month: "short"
-    });
-
     document.getElementById("time").textContent = time;
-    document.getElementById("date").textContent = date;
 }
 
 setInterval(updateClock, 1000);
