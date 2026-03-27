@@ -28,12 +28,6 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 15px 20px;
-    font-weight: bold;
-}
-
-.title {
-    text-align: center;
-    font-size: 20px;
 }
 
 .car-section {
@@ -48,7 +42,7 @@ body {
 
 .status {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     padding: 0 20px 20px;
     font-size: 18px;
 }
@@ -66,10 +60,10 @@ body {
 .card {
     background: #f7f7f7;
     border-radius: 15px;
-    padding: 20px 10px;
-    text-align: center;
-    color: #ff3c00;
-    font-size: 14px;
+    padding: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
@@ -79,6 +73,12 @@ body {
 .card:active {
     transform: scale(0.97);
 }
+
+.card img {
+    width: 55px;
+    height: 55px;
+    object-fit: contain;
+}
 </style>
 </head>
 
@@ -87,37 +87,36 @@ body {
 <div class="app">
 
     <div class="header">
-        <div>☰</div>
-        <div class="title">my ami play</div>
+        <div>My Ami Play</div>
         <div>⇥</div>
     </div>
 
     <div class="car-section">
-        <div>Citroën Switch ●</div>
-        <div style="font-size:40px;">☀️</div>
+        <div>Citroën Ami</div>
         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Citroen_Ami_2020.jpg/320px-Citroen_Ami_2020.jpg">
     </div>
 
     <div class="status">
         <div id="time">--:--</div>
+        <div id="date">---</div>
     </div>
 
     <div class="grid">
 
-        <div class="card" onclick="openApp('nav')">
-            🧭<br>Nav
+        <div class="card" onclick="openApp('maps')">
+            <img src="https://img.icons8.com/ios-filled/100/ff3c00/compass.png">
         </div>
 
         <div class="card" onclick="openApp('phone')">
-            📞<br>Phone
+            <img src="https://img.icons8.com/ios-filled/100/ff3c00/phone.png">
         </div>
 
         <div class="card" onclick="openApp('radio')">
-            📻<br>Radio
+            <img src="https://img.icons8.com/ios-filled/100/ff3c00/radio.png">
         </div>
 
-        <div class="card" onclick="openApp('media')">
-            🎵<br>Media
+        <div class="card" onclick="openApp('music')">
+            <img src="https://img.icons8.com/ios-filled/100/ff3c00/musical-notes.png">
         </div>
 
     </div>
@@ -127,21 +126,26 @@ body {
 <script>
 function openApp(app) {
 
-    if (app === "nav") {
-        // safer fallback navigation
-        window.location.href = "https://www.google.com/maps";
+    if (app === "maps") {
+        window.location.href = "waze://";
+        setTimeout(() => {
+            window.location.href = "https://www.waze.com";
+        }, 1200);
     }
 
     if (app === "phone") {
-        alert("Phone app opened");
+        window.location.href = "tel://";
     }
 
     if (app === "radio") {
         window.location.href = "https://lhort3.github.io/my-ami-play/radio-player";
     }
 
-    if (app === "media") {
-        alert("Media app opened");
+    if (app === "music") {
+        window.location.href = "amazonmusic://";
+        setTimeout(() => {
+            window.location.href = "https://music.amazon.com";
+        }, 1200);
     }
 }
 
@@ -150,13 +154,27 @@ function updateClock() {
 
     let hours = now.getHours();
     const minutes = now.getMinutes();
+    const ampm = hours >= 12 ? "PM" : "AM";
+
+    hours = hours % 12;
+    if (hours === 0) hours = 12;
 
     const time =
         String(hours).padStart(2, "0") +
         ":" +
-        String(minutes).padStart(2, "0");
+        String(minutes).padStart(2, "0") +
+        " " +
+        ampm;
 
     document.getElementById("time").textContent = time;
+
+    const date = now.toLocaleDateString([], {
+        weekday: "short",
+        day: "2-digit",
+        month: "short"
+    });
+
+    document.getElementById("date").textContent = date;
 }
 
 setInterval(updateClock, 1000);
