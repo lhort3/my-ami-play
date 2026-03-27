@@ -1,1 +1,320 @@
-<H3>Please bear with us!</H3><br><H5>Ami Radio is coming soon...</H5>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Swipe Radio</title>
+
+<style>
+
+body{
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:#fb5a33;
+    font-family:Arial, Helvetica, sans-serif;
+    color:white;
+    padding:20px;
+    box-sizing:border-box;
+    overflow:hidden;
+}
+
+.player{
+    text-align:center;
+    width:100%;
+    max-width:400px;
+}
+
+.viewport{
+    overflow:hidden;
+    position:relative;
+    width:100%;
+}
+
+.slide{
+    transition:transform 0.35s ease, opacity 0.35s ease;
+}
+
+/* animations */
+.slide.out-left{ transform:translateX(-100%); opacity:0; }
+.slide.out-right{ transform:translateX(100%); opacity:0; }
+
+.slide.reset{ transition:none; transform:translateX(0); opacity:1; }
+
+.slide.in-left{ transform:translateX(100%); }
+.slide.in-right{ transform:translateX(-100%); }
+
+.slide.animate{
+    transition:transform 0.35s ease, opacity 0.35s ease;
+    transform:translateX(0);
+    opacity:1;
+}
+
+/* UI */
+.logo-box{
+    width:60vw;
+    max-width:220px;
+    aspect-ratio:1/1;
+    border-radius:20%;
+    overflow:hidden;
+    margin:auto;
+    margin-bottom:20px;
+}
+
+.logo-box img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.song{
+    font-size:clamp(18px, 5vw, 24px);
+    font-weight:bold;
+}
+
+.artist{
+    font-size:clamp(14px, 3.5vw, 18px);
+    opacity:0.7;
+    margin-bottom:25px;
+}
+
+.play-button{
+    width:20vw;
+    max-width:80px;
+    aspect-ratio:1/1;
+    border-radius:50%;
+    border:3px solid white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    cursor:pointer;
+    margin:auto;
+    font-size:clamp(20px, 6vw, 30px);
+    transition:0.2s;
+}
+
+.play-button:hover{
+    transform:scale(1.08);
+}
+
+/* START OVERLAY */
+.start-overlay{
+    position:fixed;
+    inset:0;
+    background:#fb5a33;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:10;
+}
+
+.start-btn{
+    width:100px;
+    height:100px;
+    border-radius:50%;
+    border:3px solid white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:40px;
+    cursor:pointer;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- START SCREEN -->
+<div class="start-overlay" id="startOverlay">
+    <div class="start-btn" id="startBtn">⧐</div>
+</div>
+
+<div class="player">
+
+<div class="viewport">
+    <div class="slide" id="slide">
+
+        <div class="logo-box">
+            <img id="logo">
+        </div>
+
+        <div class="song" id="song"></div>
+        <div class="artist" id="artist"></div>
+
+    </div>
+</div>
+
+<div class="play-button" id="playBtn">⧐</div>
+
+</div>
+
+<audio id="radio"></audio>
+
+<script>
+
+/* STATIONS */
+const stations = [
+{
+    name: "Capital",
+    artist: "My Ami Radio",
+    stream: "http://media-ice.musicradio.com/CapitalCoventryMP3",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8efETqvqv-ncVuUGZ8-Hu05NtjNQzJ6_32n0XB4v_wQ&s"
+},
+{
+    name: "BBC Radio 1",
+    artist: "My Ami Radio (UK)",
+    stream: "https://lsn.lv/bbcradio.m3u8?station=bbc_radio_one%22&bitrate=320000%22",
+    image: "https://i1.sndcdn.com/artworks-000101022586-avs1tc-t500x500.jpg"
+},
+{
+    name: "Smooth CHILL",
+    artist: "My Ami Radio",
+    stream: "http://media-ice.musicradio.com/ChillMP3",
+    image: "https://www.globalplayer.com/assets/track-placeholders/smoothchill.jpg"
+},
+{
+    name: "Heart Xmas",
+    artist: "Channel May Not Be Streaming",
+    stream: "http://media-ice.musicradio.com/HeartXmasMP3",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUYS4KY-p0Zs7fczWRlMBSY87pdTlidJr27w&s"
+}
+];
+
+let current = 0;
+let isPlaying = false;
+let unlocked = false;
+
+const audio = document.getElementById("radio");
+const logo = document.getElementById("logo");
+const song = document.getElementById("song");
+const artist = document.getElementById("artist");
+const btn = document.getElementById("playBtn");
+const slide = document.getElementById("slide");
+const startOverlay = document.getElementById("startOverlay");
+const startBtn = document.getElementById("startBtn");
+
+/* LOAD */
+function loadStation(index){
+    current = (index + stations.length) % stations.length;
+
+    const s = stations[current];
+
+    audio.src = s.stream;
+    logo.src = s.image;
+    song.innerText = s.name;
+    artist.innerText = s.artist;
+
+    if(unlocked && isPlaying){
+        audio.play();
+    }
+}
+
+/* INIT */
+loadStation(current);
+
+/* FIRST TAP */
+startBtn.onclick = function(){
+    unlocked = true;
+    isPlaying = true;
+
+    audio.play();
+
+    btn.innerHTML = "■";
+    startOverlay.style.display = "none";
+};
+
+/* BUTTON */
+btn.onclick = function(){
+    if(!unlocked) return;
+
+    if(isPlaying){
+        audio.pause();
+        btn.innerHTML = "⧐";
+        isPlaying = false;
+    } else {
+        audio.play();
+        btn.innerHTML = "■";
+        isPlaying = true;
+    }
+};
+
+/* ANIMATION SWITCH */
+function changeStation(newIndex, direction){
+
+    slide.classList.add(direction === "next" ? "out-left" : "out-right");
+
+    setTimeout(() => {
+
+        audio.pause();
+        loadStation(newIndex);
+
+        slide.classList.remove("out-left","out-right");
+        slide.classList.add("reset");
+
+        slide.classList.add(direction === "next" ? "in-left" : "in-right");
+
+        slide.offsetHeight;
+
+        slide.classList.remove("reset","in-left","in-right");
+        slide.classList.add("animate");
+
+    }, 300);
+}
+
+function nextStation(){
+    changeStation(current + 1, "next");
+}
+
+function prevStation(){
+    changeStation(current - 1, "prev");
+}
+
+/* SWIPE */
+let startX = 0;
+
+document.addEventListener("touchstart", e => {
+    startX = e.touches[0].clientX;
+});
+
+document.addEventListener("touchend", e => {
+    let diff = startX - e.changedTouches[0].clientX;
+
+    if(Math.abs(diff) > 50 && unlocked){
+        if(diff > 0){
+            nextStation();
+        } else {
+            prevStation();
+        }
+    }
+});
+
+/* DESKTOP */
+let mouseDown = false;
+
+document.addEventListener("mousedown", e => {
+    mouseDown = true;
+    startX = e.clientX;
+});
+
+document.addEventListener("mouseup", e => {
+    if(!mouseDown) return;
+    mouseDown = false;
+
+    let diff = startX - e.clientX;
+
+    if(Math.abs(diff) > 50 && unlocked){
+        if(diff > 0){
+            nextStation();
+        } else {
+            prevStation();
+        }
+    }
+});
+
+</script>
+
+</body>
+</html>
